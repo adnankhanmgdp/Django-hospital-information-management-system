@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <meta name="robots" content="" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="GC Hospital : Hospital Administration" />
+    <meta property="og:title" content="GC Hospital : Hospital Administration" />
+    <meta property="og:description" content="GC Hospital : Hospital Administration" />
+    <meta property="og:image" content="https://eres.dexignzone.com/xhtml/social-image.png" />
+    <meta name="format-detection" content="telephone=no">
+    <title>GC Hospital | Staff Registration</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/logo.png' %}">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+
+<body class="vh-100">
+    <div class="authincation h-100">
+        <div class="container h-100">
+            {% if request.session.err == True %}
+            <div class="alert alert-danger solid alert-dismissible fade show mt-2">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                </button>
+                <strong>{{request.session.err_msg}}</strong>
+            </div>
+            {% endif %}
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+                                    <div class="text-center mb-3">
+                                        <a href="index.html"><img src="{% static 'images/logo.png' %}" width="80px"
+                                                alt=""></a>
+                                    </div>
+                                    <h2 class="text-center mb-4">Staff registration</h2>
+                                   
+                                    <form method="POST" class="needs-validation" action="/signup" novalidate>
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col form-group">
+                                                <label class="mb-1"><strong>First Name</strong></label>
+                                                <input type="text" class="form-control" name="fname" placeholder="Eg: Imran" required>
+                                                <div class="invalid-feedback">
+                                                    Please enter your first name.
+                                                </div>
+                                            </div>
+                                            <div class="col form-group">
+                                                <label class="mb-1"><strong>Last Name</strong></label>
+                                                <input type="text" class="form-control" name="lname" placeholder="Eg: Haq" required>
+                                                <div class="invalid-feedback">
+                                                    Please enter your last name.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Email</strong></label>
+                                            <input type="email" class="form-control" name="email" placeholder="Eg: hello@example.com" required>
+                                            <div class="invalid-feedback">
+                                                Please enter your email.
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col form-group">
+                                                <label class="mb-1"><strong>Password</strong></label>
+                                                <input type="password" minlength="8" maxlength="15" class="form-control" id="pass" name="pass" placeholder="●●●●●●●●●●●" required>
+                                                <div class="invalid-feedback">
+                                                    Please enter a valid password.
+                                                </div>
+                                            </div>
+                                            <div class="col form-group">
+                                                <label class="mb-1"><strong>Confirm Password</strong></label>
+                                                <input type="password" minlength="8" maxlength="15" class="form-control" id="cpass" name="cpass" placeholder="●●●●●●●●●●●" required>
+                                                <div class="invalid-feedback">
+                                                    Please confirm your password.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Address</strong></label>
+                                            <input type="text" class="form-control" name="address"
+                                                placeholder="117, Dali ganj, Lucknow" required>
+                                                <div class="invalid-feedback">
+                                                    Please enter a valid address.
+                                                </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col form-group">
+                                                <label class="mb-1"><strong>Pincode</strong></label>
+                                                <input type="number" name="pincode" class="form-control" required>
+                                                <div class="invalid-feedback">
+                                                    Please enter a valid pincode.
+                                                </div>
+                                            </div>
+                                            <div class="col form-group">
+                                                <label class="mb-1"><strong>Phone</strong></label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-text">+91</div>
+                                                    <input type="number" minlength="10" maxlength="10" name="phone" class="form-control"
+                                                        placeholder="9xxx-xxx-xxx" required>
+                                                        <div class="invalid-feedback">
+                                                            Please enter a valid phone 10 digit number.
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col form-group">
+                                                <label class="mb-1"><strong>Staff Id</strong></label>
+                                                <input type="text" minlength="6" maxlength="6" name="staffid" class="form-control" required>
+                                                <div class="invalid-feedback">
+                                                    Please enter a valid staff id.
+                                                </div>
+                                            </div>
+                                            <div class="col my-auto form-group">
+                                                <label class="m-1"><strong>Gender</strong></label><br>
+                                                <label class="radio-inline mx-2">
+                                                    <input type="radio" name="gender" value="Male" required> Male</label>
+                                                <label class="radio-inline mx-2">
+                                                    <input type="radio" name="gender" value="Female" required> Female</label>
+                                                    
+                                            </div>
+                                        </div>
+                                        <div class="text-center mt-4">
+                                            <button type="submit" class="btn btn-primary btn-block">Create
+                                                Account</button>
+                                        </div>
+                                    </form>
+                                    <div class="new-account mt-3">
+                                        <p>Already have an account? <a class="text-primary" href="/">Sign in</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--**********************************
+	Scripts
+***********************************-->
+    <!-- Required vendors -->
+    <script src="js/plugins-init/jquery.validate-init.js" type="javascript"></script>
+    <script src="{% static 'vendor/global/global.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+
+    <!-- <script src="{% static 'js/custom.min.js' %}"></script> -->
+    <script src="{% static 'js/deznav-init.js' %}"></script>
+    <script>
+		(function () {
+		  'use strict'
+
+		  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+		  var forms = document.querySelectorAll('.needs-validation')
+
+		  // Loop over them and prevent submission
+		  Array.prototype.slice.call(forms)
+			.forEach(function (form) {
+			  form.addEventListener('submit', function (event) {
+				if (!form.checkValidity()) {
+				  event.preventDefault()
+				  event.stopPropagation()
+				}
+
+				form.classList.add('was-validated')
+			  }, false)
+			})
+		})()
+	</script>
+
+</body>
+
+</html>

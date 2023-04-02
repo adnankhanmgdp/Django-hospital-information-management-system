@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="content-body">
+    <!-- row -->
+    <!-- modal -->
+    <div class="modal fade" id="basicModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+                </div>
+                <form action="/newrole" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="mb-3 col-4">
+                                <label class="form-label">Role name</label>
+                                <input type="text" name="role" class="form-control"
+                                    placeholder="Nurse">
+                            </div>
+                            <div class="mb-3 col-8">
+                                <label class="form-label">Description</label>
+                                <input type="text" name="desc" class="form-control"
+                                    placeholder="This role gives permission to nurse">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger light"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Role</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- modal-end -->
+    
+    <div class="container-fluid">
+        <form action="/saverole" method="post">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Select a role</h4>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="basic-form">
+
+                                <div class="dropdown bootstrap-select default-select form-control wide mb-3">
+                                    <select onchange="rooole()" name="role" id="role"
+                                        class="default-select form-control wide mb-3">
+                                        {% for role in roles %}
+                                        <option value="{{role.role}}">{{role.role}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="dropdown-menu ">
+                                        <div class="inner show" role="listbox" id="bs-select-1" tabindex="-1">
+                                            <ul class="dropdown-menu inner show" role="presentation"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="text-center mx-2 my-4">
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#basicModal"
+                                                class="btn btn-primary btn-block">Add new
+                                                role</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center mx-2 my-4">
+                                            <button type="submit" class="btn btn-primary btn-block">Save Roles</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Choose permissions for <span id="rrole">{{roles.0.role}}</span> role
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-4 col-xxl-6 col-6">
+                                    <div class="form-check custom-checkbox mb-3">
+                                        <input type="checkbox" class="form-check-input" id="patients">
+                                        <label class="form-check-label" for="patients">Patients</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-xxl-6 col-6">
+                                    <div class="form-check custom-checkbox mb-3 checkbox-info">
+                                        <input type="checkbox" class="form-check-input" id="staff">
+                                        <label class="form-check-label" for="staff">Staff</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-xxl-6 col-6">
+                                    <div class="form-check custom-checkbox mb-3 checkbox-success">
+                                        <input type="checkbox" class="form-check-input" id="appointments">
+                                        <label class="form-check-label" for="appointments">Appointments</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-xxl-6 col-6">
+                                    <div class="form-check custom-checkbox mb-3 checkbox-warning">
+                                        <input type="checkbox" class="form-check-input" id="invoices">
+                                        <label class="form-check-label" for="invoices">Invoices</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div id="roledesc">{{roles.0.description}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    var rolles = {
+        {% for role in roles %}
+    '{{role.role}}': ["{{role.description}}", "{{role.permissions}}"],
+        {% endfor %}
+     }
+    function rooole() {
+        $('select').on('change', function () {
+            // console.log($("#role").val())
+            $("#rrole").text(this.value)
+            $("#roledesc").text(rolles[this.value][0])
+        });
+    }
+    rooole()
+</script>
+{% endblock content %}

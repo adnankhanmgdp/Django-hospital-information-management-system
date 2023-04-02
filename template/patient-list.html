@@ -1,0 +1,171 @@
+
+	{% extends 'base.html' %}
+	{% block content %}
+	{% load static %}
+		<!--**********************************
+            Content body start
+        ***********************************-->
+		<!-- Button trigger modal -->
+		
+		<!-- Modal -->
+		<div class="modal fade" id="convertOIPD" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+			<div class="modal-content">
+				<form action="/toipd" method="post">
+					{% csrf_token %}
+				<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalLabel">Convert to IPD</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					
+						<label for="caseoid">Case ID</label>
+						<input type="text" name="caseoid" id="caseoid" class="mb-1 form-control">
+						<label class="form-label"><strong>Ward Type</strong><font class="px-1" style="color: red;">*</font></label>
+						<select id="wardd" name="wardd" class="mb-1 default-select form-control wide" required>
+							<option value="General" selected>General</option>
+							<option value="Semi Private">Semi Private</option>
+							<option value="Private">Private</option>
+							<option value="Delux">Delux</option>
+						</select>
+						<label for="bedd">Bed<font class="px-1" style="color: red;">*</font></label>
+						<input type="text" name="bedd" id="bedd" class="mb-1 form-control" required>
+
+					
+				</div>
+				<script>
+					function loadDoc() {
+						const xhttp = new XMLHttpRequest();
+						xhttp.onload = function() {
+							document.getElementById("wardd").innerHTML = this.responseText;
+							$('#wardd').on('change', function() {
+						const yhttp = new XMLHttpRequest();
+						yhttp.onload = function() {
+							document.getElementById("bedd").setAttribute("max", this.responseText);
+							document.getElementById("bedd").setAttribute("Placeholder", this.responseText+" bed(s)");
+							}
+						yhttp.open("GET", "/getwards?w="+this.value, true);
+						yhttp.send();
+				});
+							}
+						xhttp.open("GET", "/getwards", true);
+						xhttp.send();
+					}
+					loadDoc()
+					
+				</script>
+				<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary">Update</button>
+				</div>
+			</form>
+			</div>
+			</div>
+		</div>
+		<div class="content-body">
+			<!-- row -->
+			<div class="container-fluid">
+				<div class="form-head d-flex mb-3 mb-md-4 align-items-start">
+					<div class="me-auto d-none d-lg-block">
+						<a href="#" data-bs-toggle="modal" data-bs-target="#addPatient" class="btn btn-primary btn-rounded">+ Add New</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xl-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="table-responsive">
+									<table id="example"
+										class="table table-striped patient-list mb-4 dataTablesCard fs-14">
+										<thead>
+											<tr>
+												<th>
+													<div class="checkbox text-end align-self-center">
+														<div class="form-check custom-checkbox ">
+															<input type="checkbox" class="form-check-input"
+																id="checkAll" required="">
+															<label class="form-check-label" for="checkAll"></label>
+														</div>
+													</div>
+												</th>
+												<th>Case ID</th>
+												<th>Admission Date</th>
+												<th>Patient Name</th>
+												<th>Info</th>
+												<th>Phone</th>
+												<th>Doctor Assgined</th>
+												<th>OPD/IPD</th>
+												{% if result != 'OPD'%}<th>Ward</th>{% endif %}
+												<th>Status</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for patient in patients %}
+											<tr>
+												<td>
+													<div class="checkbox text-end align-self-center">
+														<div class="form-check custom-checkbox ">
+															<input type="checkbox" class="form-check-input"
+																id="customCheckBox1" required="">
+															<label class="form-check-label"
+																for="customCheckBox1"></label>
+														</div>
+													</div>
+												</td>
+												<td><a href="/patient/{{patient.caseid}}">{{patient.caseid}}</a></td>
+												<td><a href="/patient/{{patient.caseid}}">{{patient.dateofadm.day}}/{{patient.dateofadm.month}}/{{patient.dateofadm.year}}</a></td>
+												<td><a href="/patient/{{patient.caseid}}">{{patient.pname}}</a></td>
+												<td><a href="/patient/{{patient.caseid}}">{{patient.sex}}/{{patient.age}} years</a></td>
+												<td><a href="tel:+91{{patient.phone}}">{{patient.phone}}</a></td>
+												<td>{{patient.doctor}}</td>
+												<td>{{patient.ptype}}</td>
+												{% if result != 'OPD'%}
+												<td>{{patient.ward}}</td>
+												{% endif %} 
+												{% if patient.ptype == 'OPD' %}
+												<td>
+													<a href="#" data-bs-toggle="modal" data-bs-target="#convertOIPD" title="Convert to IPD" onclick="caseoid.value='OIPD-'+'{{patient.caseid}}'.split('-')[1]"><i class="bi bi-box-arrow-in-right" style="font-size:x-large;color:red;"></i> <span class="text-danger fs-4"> &nbsp;IPD</span></a>
+												</td>
+												{% else %}
+												<td>
+													<span class="text-nowrap">
+														<svg class="me-2" width="9" height="9" viewBox="0 0 9 9"
+															fill="none" xmlns="http://www.w3.org/2000/svg">
+															<circle cx="4.5" cy="4.5" r="4.5" fill="#FFB800" />
+														</svg>
+														<span class="text-warning">{{patient.status}}</span>
+													</span>
+												</td>
+												
+												{% endif %}
+												<td>
+													<a href="javascript:void(0);">
+														<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+															xmlns="http://www.w3.org/2000/svg">
+															<path d="M3 6H5H21" stroke="#F46B68" stroke-width="2"
+																stroke-linecap="round" stroke-linejoin="round" />
+															<path
+																d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z"
+																stroke="#F46B68" stroke-width="2" stroke-linecap="round"
+																stroke-linejoin="round" />
+														</svg>
+													</a>
+												</td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--**********************************
+            Content body end
+        ***********************************-->
+		{% endblock content %}
+

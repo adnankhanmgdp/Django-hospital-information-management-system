@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<!--**********************************
+            Content body start
+        ***********************************-->
+<!-- Button trigger modal -->
+
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table " id="doctorstable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Doctor name</th>
+                                        <th>Qualification</th>
+                                        <th>Specialization</th>
+                                        <th>Experience</th>
+                                        <th>Phone</th>
+                                        <th>Appointment Fee</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for doctor in doctors %}
+                                    <tr>
+                                        <td><a href="/doctor/{{doctor.did}}">{{doctor.did}}</a></td>
+                                        <td><a href="/doctor/{{doctor.did}}">{{doctor.name}}</a></td>
+                                        <td><a href="/doctor/{{doctor.did}}">{{doctor.qual}}</a></td>
+                                        <td><a href="/doctor/{{doctor.did}}">{{doctor.spec}}</a></td>
+                                        <td><a href="/doctor/{{doctor.did}}">{{doctor.exp}} years</a></td>
+                                        <td><a href="tel:{{doctor.phone}}">{{doctor.phone}}</a></td>
+                                        <td><a href="/doctor/{{doctor.did}}">{{doctor.fee}}</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--**********************************
+            Content body end
+        ***********************************-->
+{% endblock content %}

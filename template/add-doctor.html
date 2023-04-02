@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<div class="content-body">
+    <!-- row -->
+    <!-- modal -->
+    <div class="modal fade" id="basicModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+                </div>
+                <form action="/newrole" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="mb-3 col-4">
+                                <label class="form-label">Role name</label>
+                                <input type="text" name="role" class="form-control"
+                                    placeholder="Nurse">
+                            </div>
+                            <div class="mb-3 col-8">
+                                <label class="form-label">Description</label>
+                                <input type="text" name="desc" class="form-control"
+                                    placeholder="This role gives permission to nurse">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger light"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Role</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- modal-end -->
+    
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-xl-6 col-lg-6">
+                <form action="/add-doctor" id="docform" method="post">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Add New Doctor</h4>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="basic-form">
+
+                                <div class="mb-2 row">
+                                    <label class="col-sm-3 col-form-label">Doctor Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="docname" name="docname" placeholder="E.g. Dr. Rizwanul haq" required>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row">
+                                    <label class="col-sm-3 col-form-label">Qualification</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="qualification" name="qualification" placeholder="E.g. MBBS, MD" required>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row">
+                                    <label class="col-sm-3 col-form-label">Specialization</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="specialization" name="specialization" placeholder="E.g. Tuberculosis & Respiratory Diseases/Medicine" required>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row">
+                                    <label class="col-sm-3 col-form-label">Years of Experience</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="exp" name="exp" placeholder="E.g. 20" required>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row">
+                                    <label class="col-sm-3 col-form-label">Doctor Email</label>
+                                    <div class="col-sm-9">
+                                        <input type="email" class="form-control" id="docemail" name="docemail" placeholder="E.g. drrizwanulhaq@gmaill.com" required>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row">
+                                    <label class="col-sm-3 col-form-label">Phone</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" maxlength="10" class="form-control" id="phone" name="phone" placeholder="without 0 and +91" required>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row">
+                                    <label class="col-sm-3 col-form-label">Doctor's Fee</label>
+                                    <div class="col-sm-9">
+                                        <input type="number"  class="form-control" id="fee" name="fee" placeholder="In Rupees" required>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row">
+                                    <label class="col-sm-3 col-form-label">Create Password</label>
+                                    <div class="col-sm-9">
+                                        <input type="password" class="form-control" id="docpass" name="docpass" placeholder="**********" required>
+                                    </div>
+                                </div>
+
+                                <div class="row justify-content-center">
+                                    <div class="col-6">
+                                        <div class="text-center mx-2 my-4">
+                                            <button type="button" onclick="savedoc()" class="btn btn-primary btn-block">Save Doctor</button>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <script>
+                    function savedoc()
+                    {
+                        name = docname.value
+                        qual = qualification.value
+                        spec = specialization.value
+                        expe = exp.value
+                        em = docemail.value
+                        ph = phone.value
+                        fe = fee.value
+                        c = confirm("Please Confirm Doctor's profile\nName: "+name+"\nQualification: "+qual+"\nSpecialization: "+spec+"\nExperience: "+expe+" years \nEmail: "+em+"\nPhone: "+ph+"\nAppointment Fee: ₹"+fe)
+                        if(c)
+                        {
+                            docform.submit()
+                        }
+                    }
+                </script>
+                </div>
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">All Doctors</h4>
+                        </div>
+                        <div class="card-body px-3 table-responsive">
+                            <table class="table " id="doctorstable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Doctor name</th>
+                                        <th>Qualification</th>
+                                        <th>Specialization</th>
+                                        <th>Experience</th>
+                                        <th>Date of Joining</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Appointment Fee</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for doctor in doctors %}
+                                    <tr>
+                                        <td>{{doctor.did}}</td>
+                                        <td>{{doctor.name}}</td>
+                                        <td>{{doctor.qual}}</td>
+                                        <td>{{doctor.spec}}</td>
+                                        <td>{{doctor.exp}} years</td>
+                                        <td>{{doctor.joindate}}</td>
+                                        <td>{{doctor.email}}</td>
+                                        <td>{{doctor.phone}}</td>
+                                        <td>{{doctor.fee}}</td>
+                                        <td>{% if doctor.status == 'active' %}
+                                            <?xml version="1.0" encoding="utf-8"?><svg width="50" height="30" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 122.88" style="enable-background:new 0 0 122.88 122.88" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#6BBE66;}</style><g><path class="st0" d="M61.44,0c33.93,0,61.44,27.51,61.44,61.44c0,33.93-27.51,61.44-61.44,61.44C27.51,122.88,0,95.37,0,61.44 C0,27.51,27.51,0,61.44,0L61.44,0z"/></g></svg>
+                                            {% else %}
+                                            <?xml version="1.0" encoding="utf-8"?><svg width="50" height="30" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 122.88" style="enable-background:new 0 0 122.88 122.88" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#FF4141;}</style><g><path class="st0" d="M61.44,0c33.93,0,61.44,27.51,61.44,61.44s-27.51,61.44-61.44,61.44S0,95.37,0,61.44S27.51,0,61.44,0L61.44,0z"/></g></svg>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+</div>
+{% endblock content %}

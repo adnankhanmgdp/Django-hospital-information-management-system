@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="keywords" content="" />
+	<meta name="author" content="" />
+	<meta name="robots" content="" />
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="GC Hospital : Hospital Administration" />
+	<meta property="og:title" content="GC Hospital : Hospital Administration" />
+	<meta property="og:description" content="GC Hospital : Hospital Administration" />
+	<meta property="og:image" content="https://eres.dexignzone.com/xhtml/social-image.png' %}" />
+	<meta name="format-detection" content="telephone=no">
+	<title>GC Hospital | Admin Dashboard</title>
+	<!-- Favicon icon -->
+	<link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/logo.png' %}">
+	<link href="{% static 'vendor/owl-carousel/owl.carousel.css' %}" rel="stylesheet">
+	<link href="{% static 'vendor/datatables/css/jquery.dataTables.min.css' %}" rel="stylesheet">
+	<link href="{% static 'vendor/bootstrap-select/dist/css/bootstrap-select.min.css' %}" rel="stylesheet">
+	<link href="{% static 'css/style.css' %}" rel="stylesheet">
+	<link href="{% static 'https://cdn.lineicons.com/2.0/LineIcons.css' %}" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<!-- <link rel="preconnect" href="https://fonts.googleapis.com"> -->
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet">
+	<!-- Style Css -->
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+	<link href="{% static 'css/style.css' %}" rel="stylesheet">
+	<style>
+		@media only screen and (max-width: 768px) {
+
+			/* For mobile phones: */
+			#mob-logo {
+				display: none;
+			}
+		}
+
+		.select2-container {
+			z-index: 2000 !important;
+		}
+
+		/* Important part */
+		/* .modal-dialog {
+			overflow-y: initial !important
+		}
+
+		.modal-body {
+			height: 70vh;
+			overflow-y: auto;
+		} */
+
+		/* Chrome, Safari, Edge, Opera */
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		/* Firefox */
+		input[type=number] {
+			-moz-appearance: textfield;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Modal -->
+	<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="addPatient">
+		<div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Add New Patient</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal">
+					</button>
+				</div>
+				<form action="/add-patient" method="POST" autocomplete="off" autocapitalize="">
+					{% csrf_token %}
+					<div class="modal-body">
+						<div class="basic-form">
+							<div class="row">
+								<div class="mb-4 col-md-6">
+									<label class="form-label"><strong>Patient Name</strong>
+										<font class="px-1" style="color: red;">*</font>
+									</label>
+									<input type="text" class="form-control" name="pname" id="pname"
+										placeholder="eg: Imran Siddique" required>
+								</div>
+								<div class="mb-4 col-md-6 form-group">
+									<label class="form-label"><strong>Phone</strong>
+										<font class="px-1" style="color: red;">*</font>
+									</label>
+									<div class="input-group mb-2">
+										<div class="input-group-text">+91</div>
+										<input type="number" minlength="10" maxlength="10" id="phone" name="phone"
+											class="form-control" placeholder="9xxx-xxx-xxx" required>
+									</div>
+								</div>
+
+								<div class="mb-4 col-12">
+									<label class="form-label"><strong>Address</strong>
+										<font class="px-1" style="color: red;">*</font>
+									</label>
+									<input type="text" class="form-control" id="address" name="address" required>
+								</div>
+
+								<div class="mb-4 col-md-2 col-sm-12">
+									<label class="form-label"><strong>Age</strong>
+										<font class="px-1" style="color: red;">*</font>
+									</label>
+									<input type="number" class="form-control" id="age" name="age" placeholder="eg: 40"
+										required>
+								</div>
+								<div class=" col-md-6 col-sm-12 my-auto">
+									<div class="form-check  d-flex justify-content-evenly">
+										<label class="form-label"><strong>Gender</strong>
+											<font class="px-1" style="color: red;">*</font>
+										</label>
+										<div><input class="form-check-input" id="male" type="radio" name="gender"
+												value="M" required>
+											<label for="male" class="form-check-label">
+												Male
+											</label>
+										</div>
+										<div><input class="form-check-input" id="female" type="radio" name="gender"
+												value="F" required>
+											<label for="female" class="form-check-label">
+												Female
+											</label>
+										</div>
+										<div><input class="form-check-input" id="other" type="radio" name="gender"
+												value="O" required>
+											<label for="other" class="form-check-label">
+												Other
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="mb-4 col-md-4 col-sm-12">
+									<label class="form-label"><strong>Guardian Name</strong></label>
+									<input type="text" class="form-control" name="guardian" id="guardian">
+								</div>
+								<div class="mb-4 col-md-4">
+									<label class="form-label"><strong>Patient Type</strong>
+										<font class="px-1" style="color: red;">*</font>
+									</label>
+									<select id="ptype" onchange="p_type(this)" name="ptype"
+										class="default-select form-control wide" required>
+										<option selected disabled>Choose...</option>
+										<option value="OPD">OPD Patient</option>
+										<option value="IPD">IPD Patient</option>
+									</select>
+								</div>
+								<div class="mb-4 col-md-4">
+									<label class="form-label"><strong>Date of Admission</strong>
+										<font class="px-1" style="color: red;">*</font>
+									</label>
+									<input type="date" onclick="setDate()" id="date" value="" name="date"
+										class="form-control" required>
+								</div>
+								<div class="mb-4 col-md-4">
+									<label class="form-label"><strong>Consultant Doctor</strong>
+										<font class="px-1" style="color: red;">*</font>
+									</label>
+									<select id="doctor" name="doctor"
+										class="default-select js-example-placeholder-single js-states  form-control wide"
+										required>
+										<!-- <option selected disabled>Choose...</option> -->
+										<option value="Dr Ayaan Mehdi">Dr. Ayaan Mehdi</option>
+										<option value="Dr Devansh kesarwani">Dr. Devansh kesarwani</option>
+									</select>
+								</div>
+								<div class="mb-4 col-md-4 col-sm-12">
+									<label class="form-label"><strong>Case ID</strong>
+										<font class="px-1" style="color: red;">*</font>
+									</label>
+									<input type="text" class="form-control" id="caseid" name="caseid" required>
+								</div>
+								<div class="mb-4 col-md-4" style="display: none;" id="ward-div">
+									<label class="form-label"><strong>Ward Type</strong>
+										<font class="px-1" style="color: red;">*</font>
+									</label>
+									<select id="ward" name="ward" class="default-select form-control wide" required>
+										<option value="General" selected>General</option>
+										<option value="Semi Private">Semi Private</option>
+										<option value="Private">Private</option>
+										<option value="Delux">Delux</option>
+									</select>
+								</div>
+								<div class="mb-4 col-md-4 col-sm-12" style="display: none;" id="bed-div">
+									<label class="form-label"><strong>Bed Number</strong>
+										<font class="px-1" style="color: red;">*</font>
+									</label>
+									<input type="number" min="1" max="1" class="form-control" id="bed" name="bed">
+								</div>
+							</div>
+							<div class="mb-3">
+								<div class="form-check">
+									<input class="form-check-input" id="confirm" type="checkbox" required>
+									<label for="confirm" class="form-check-label">
+										Confirm Patient Details
+									</label>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Save Patient</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- end modal  -->
+	<!--*******************
+        Preloader start
+    ********************-->
+	<div id="preloader">
+		<div class="sk-three-bounce">
+			<div class="sk-child sk-bounce1"></div>
+			<div class="sk-child sk-bounce2"></div>
+			<div class="sk-child sk-bounce3"></div>
+		</div>
+	</div>
+	<!--*******************
+        Preloader end
+    ********************-->
+
+	<!--**********************************
+        Main wrapper start
+    ***********************************-->
+	<div id="main-wrapper">
+
+		<!--**********************************
+            Nav header start
+        ***********************************-->
+		<div class="nav-header">
+			<a href="/" class="brand-logo">
+				<img src="{% static 'images/logo.png' %}" width="60px" alt="">
+				<h4 id="mob-logo"
+					style="color: rgb(2, 102, 2);font-family: 'Lato', sans-serif; font-size: 30px;font-weight: 900;">
+					<strong>GC Hospital</strong>
+				</h4>
+			</a>
+
+			<div class="nav-control">
+				<div class="hamburger">
+					<span class="line"></span><span class="line"></span><span class="line"></span>
+				</div>
+			</div>
+		</div>
+		<!--**********************************
+            Nav header end
+        ***********************************-->
+
+		<!--**********************************
+            Chat box start
+        ***********************************-->
+		<!--**********************************
+            Chat box End
+        ***********************************-->
+
+		<!--**********************************
+            Header start
+        ***********************************-->
+		<div class="header">
+			<div class="header-content">
+				<nav class="navbar navbar-expand">
+					<div class="collapse navbar-collapse justify-content-between">
+						<div class="header-left">
+							<div class="dashboard_bar">
+								Dashboard
+							</div>
+						</div>
+
+						<ul class="navbar-nav header-right">
+							<li class="nav-item dropdown header-profile">
+								<a class="nav-link py-3" href="javascript:;" role="button" data-bs-toggle="dropdown">
+									<div class="header-info">
+										<span><strong>{{request.session.fname}}
+											</strong>({{request.session.position}})</span>
+									</div>
+								</a>
+								<div class="dropdown-menu dropdown-menu-end">
+									<a href="#" class="dropdown-item ai-icon">
+										<svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary"
+											width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+											stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+											<circle cx="12" cy="7" r="4"></circle>
+										</svg>
+										<span class="ms-2">Profile </span>
+									</a>
+									<a href="/logout" class="dropdown-item ai-icon">
+										<svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger"
+											width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+											stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+											<polyline points="16 17 21 12 16 7"></polyline>
+											<line x1="21" y1="12" x2="9" y2="12"></line>
+										</svg>
+										<span class="ms-2">Logout </span>
+									</a>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</div>
+		<!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+		<!--**********************************
+            Sidebar start
+        ***********************************-->
+		<div class="deznav">
+			<div class="deznav-scroll">
+				<ul class="metismenu" id="menu">
+					<li>
+						<a href="/dashboard" class="ai-icon" aria-expanded="false">
+							<i class="flaticon-381-menu"></i>
+							<span class="nav-text">Dashboard</span>
+						</a>
+					</li>
+					<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+							<i class="flaticon-381-networking"></i>
+							<span class="nav-text">Patient</span>
+						</a>
+						<ul aria-expanded="false">
+							<li><a href="javascript:void()" class="has-arrow ai-icon" aria-expanded="false">Patient
+									List</a>
+								<ul aria-expanded="false">
+									<li><a href="/ipd-patients">IPD Patients</a></li>
+									<li><a href="/opd-patients">OPD Patients</a></li>
+								</ul>
+							</li>
+							<li><a href="#" id="addnew" data-bs-toggle="modal" data-bs-target="#addPatient">Add new
+									Patient</a></li>
+						</ul>
+					</li>
+					<li><a href="#" class="ai-icon" aria-expanded="false">
+							<i class="flaticon-381-menu"></i>
+							<span class="nav-text">Appointments</span>
+						</a>
+					</li>
+					<li><a href="javascript:void(0);" class="ai-icon has-arrow" aria-expanded="false">
+							<i class="flaticon-381-id-card-4"></i>
+							<span class="nav-text">Staff</span>
+						</a>
+						<ul aria-expanded="false">
+							<li><a href="/staff-list">Staff</a></li>
+							<li><a href="#">Staff Profie</a></li>
+						</ul>
+					</li>
+					<li><a href="javascript:void(0);" class="ai-icon has-arrow" aria-expanded="false">
+							<i class="flaticon-381-id-card-4"></i>
+							<span class="nav-text">Beds</span>
+						</a>
+						<ul aria-expanded="false">
+							<li><a href="#">Available beds</a></li>
+							<li><a href="/addbeds">Wards and Beds</a></li>
+						</ul>
+					</li>
+					<li><a href="javascript:void(0);" class="ai-icon has-arrow" aria-expanded="false">
+							<i class="flaticon-381-plus"></i>
+							<span class="nav-text">Doctors</span>
+						</a>
+						<ul aria-expanded="false">
+							<li><a href="/all-doctors">Doctors List</a></li>
+							<li><a href="/add-doctor">Add Doctor</a></li>
+						</ul>
+					</li>
+					{% if request.session.role == 'su' %}
+					<li><a href="/roles" class="ai-icon" aria-expanded="false">
+							<i class="flaticon-381-user-9"></i>
+							<span class="nav-text">Roles</span>
+						</a>
+					</li>
+					<li><a href="/logs" class="ai-icon" aria-expanded="false">
+							<i class="flaticon-381-menu"></i>
+							<span class="nav-text">System Logs</span>
+						</a>
+					</li>
+					{% endif %}
+				</ul>
+
+				<!-- <div class="plus-box">
+					<p class="fs-16 font-w500 mb-1">Check your job schedule</p>
+					<a class="text-white fs-26" href="javascript:;"><i class="las la-long-arrow-alt-right"></i></a>
+				</div> -->
+
+			</div>
+		</div>
+
+		{% block content %}
+		{% endblock content%}
+
+		<!--**********************************
+            Footer start
+        ***********************************-->
+		<div class="footer">
+			<div class="copyright">
+				<p><a href="#" target="_blank">GC Hospital</a> - Copyright © Designed &amp;
+					Developed by <a href="https://github.com/adnankhanmgdp" target="_blank">Zuhaib Khan</a> & <a
+						href="https://instagram.com/ig_ravitiwari" target="_blank">Ravi Tiwari</a> (2023)</p>
+			</div>
+		</div>
+		<!--**********************************
+            Footer end
+        ***********************************-->
+
+		<!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+		<!--**********************************
+           Support ticket button end
+        ***********************************-->
+
+
+	</div>
+	<!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+	<!--**********************************
+        Scripts
+    ***********************************-->
+	<script>
+		document.addEventListener("dblclick", e => {
+			document.documentElement.requestFullscreen().catch(e => { })
+		})
+		document.addEventListener("keydown", e => {
+
+			if (e.key.toLowerCase() === "n" && e.altKey) {
+				e.preventDefault();
+				e.returnValue = false;
+				document.getElementById("addnew").click()
+			}
+			else if (e.key.toLowerCase() === "p" && e.ctrlKey) {
+				e.preventDefault();
+				e.returnValue = false;
+				window.location.href = "/all-patients"
+			}
+			else if (e.key.toLowerCase() === "i" && e.ctrlKey) {
+				e.preventDefault();
+				e.returnValue = false;
+				window.location.href = "/ipd-patients"
+			}
+			else if (e.key.toLowerCase() === "o" && e.ctrlKey) {
+				e.preventDefault();
+				e.returnValue = false;
+				window.location.href = "/opd-patients"
+			}
+			else if (e.key.toLowerCase() === "d" && e.ctrlKey && !(window.location.href.endsWith("/dashboard"))) {
+				e.preventDefault();
+				e.returnValue = false;
+				window.location.href = "/dashboard"
+			}
+			else if (e.key.toLowerCase() === "d" && e.ctrlKey) {
+				e.preventDefault();
+				e.returnValue = false;
+				alert("You are already on dashboard")
+			}
+		});
+	</script>
+	<!-- Required vendors -->
+
+	<script src="{% static 'vendor/global/global.min.js' %}"></script>
+	<script src="{% static 'vendor/bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+	<script src="{% static 'vendor/chart.js/Chart.bundle.min.js' %}"></script>
+	<script src="{% static 'vendor/owl-carousel/owl.carousel.js' %}"></script>
+	<script src="{% static 'vendor/peity/jquery.peity.min.js' %}"></script>
+	<!-- Apex Chart -->
+	<script src="{% static 'vendor/apexchart/apexchart.js' %}"></script>
+
+	<!-- datatables -->
+	<script src="{% static 'vendor/datatables/js/jquery.dataTables.min.js' %}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<script src="{% static 'vendor/invoice/jquery.invoice.js' %}"></script>
+	<!-- Dashboard 1 -->
+	<script src="{% static 'js/dashboard/dashboard-1.js' %}"></script>
+	<script src="{% static 'js/custom.min.js' %}"></script>
+	<script src="{% static 'js/deznav-init.js' %}"></script>
+	<!-- <script src="{% static 'js/demo.js' %}"></script> -->
+	<!-- <script src="{% static 'js/styleSwitcher.js' %}"></script> -->
+	<script>
+
+		function p_type(ele) {
+			var pt = ele.value
+			if (pt == "IPD") {
+				$("#ward-div").css({ "display": "block" })
+				$("#bed-div").css({ "display": "block" })
+				$("#bed]").attr("required", true)
+			}
+			if (pt == "OPD") {
+				$("#ward-div").css({ "display": "none" })
+				$("#bed-div").css({ "display": "none" })
+				$("#bed").removeAttr("required")
+			}
+		}
+	</script>
+	<script>
+		function setDate() {
+			var d = new Date()
+			var year = d.getFullYear()
+			var month = d.getMonth() + 1
+			var date = d.getDate()
+			if (month < 10) month = "0" + month;
+			if (date < 10) date = "0" + date;
+			$('#date').val(year + "-" + month + "-" + date);
+			$('#date').attr('disabled', true)
+			$('#date').attr('type', 'text')
+		}
+	</script>
+	<script>
+		function assignedDoctor() {
+
+			/*  testimonial one function by = owl.carousel.js */
+			jQuery('.assigned-doctor').owlCarousel({
+				loop: false,
+				margin: 30,
+				nav: true,
+				autoplaySpeed: 3000,
+				navSpeed: 3000,
+				paginationSpeed: 3000,
+				slideSpeed: 3000,
+				smartSpeed: 3000,
+				autoplay: false,
+				dots: false,
+				navText: ['<i class="fa fa-caret-left"></i>', '<i class="fa fa-caret-right"></i>'],
+				responsive: {
+					0: {
+						items: 1
+					},
+					576: {
+						items: 2
+					},
+					767: {
+						items: 3
+					},
+					991: {
+						items: 2
+					},
+					1200: {
+						items: 3
+					},
+					1600: {
+						items: 4
+					},
+					1920: {
+						items: 5
+					}
+				}
+			})
+		}
+
+		jQuery(window).on('load', function () {
+			setTimeout(function () {
+				assignedDoctor();
+			}, 1000);
+		});
+
+	</script>
+	<script>
+		(function ($) {
+
+			var table = $('#example').DataTable({
+				searching: true,
+				paging: true,
+				select: true,
+				info: true,
+				lengthChange: true,
+
+			});
+			$('#doctorstable').DataTable({
+                                searching: true,
+                                paging: true,
+                                select: true,
+                                info: true,
+                                // lengthChange: true,
+                            });
+			var table = $('#logtable').DataTable({
+				searching: true,
+				paging: true,
+				select: true,
+				info: true,
+				lengthChange: true,
+				order: [[0, 'desc']],
+
+			});
+			$('#example tbody').on('click', 'tr', function () {
+				var data = table.row(this).data();
+
+			});
+
+		})(jQuery);
+		$(document).ready(function () {
+			
+		})
+		async function sendinvoice(data) {
+			await $.post('/geninvoice', {
+				data: data
+			}, await function (response) {
+				console.log(response);
+				w = window.open("", "_blank", "Invoice")
+				w.document.write("" + response)
+				// w.focus()
+				// w.print()
+				// w.close()
+				var delayInMilliseconds = 1000; //1 second
+
+				setTimeout(function () {
+					//your code to be executed after 1 second
+					w.print()
+					w.close()
+				}, delayInMilliseconds);
+			});
+		}
+	</script>
+	<script>
+		const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+		const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+	</script>
+	<script>
+		$("span.donut").peity("donut", {
+			width: "180",
+			height: "180"
+		});
+	</script>
+	<script>
+		function loadDoc() {
+			const yhttp = new XMLHttpRequest();
+			yhttp.onload = function () {
+				document.getElementById("doctor").innerHTML = this.responseText;
+				$(".js-example-placeholder-single").select2({
+				placeholder: 'Choose a doctor',
+				dropdownParent: "#addPatient",
+
+			});
+			}
+			yhttp.open("GET", "/getdocname", true);
+			yhttp.send();
+
+			const xhttp = new XMLHttpRequest();
+			xhttp.onload = function () {
+				document.getElementById("ward").innerHTML = this.responseText;
+			}
+			xhttp.open("GET", "/getwards", true);
+			xhttp.send();
+		}
+		loadDoc()
+		$('#ward').on('change', function () {
+			const xhttp = new XMLHttpRequest();
+			xhttp.onload = function () {
+				document.getElementById("bed").setAttribute("max", this.responseText);
+				document.getElementById("bed").setAttribute("Placeholder", this.responseText + " bed(s)");
+			}
+			xhttp.open("GET", "/getwards?w=" + this.value, true);
+			xhttp.send();
+		});
+	</script>
+</body>
+
+</html>

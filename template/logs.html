@@ -1,0 +1,43 @@
+
+	{% extends 'base.html' %}
+	{% block content %}
+	{% load static %}
+    <div class="content-body">
+        <!-- row -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="logtable"
+                                    class="table table-striped patient-list mb-4 dataTablesCard fs-14">
+                                    <thead>
+                                        <tr>
+                                           
+                                            <th>Date/Time</th>
+                                            <th>User</th>
+                                            <th>Position</th>
+                                            <th>Ip address</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for log in logs %}
+                                        <tr>
+                                            <td>{{log.datetime}}</td>
+                                            <td>{{log.user}} ({{log.position}})</td>
+                                            <td>{{log.description}}</td>
+                                            <td>{{log.ip}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+		{% endblock content %}

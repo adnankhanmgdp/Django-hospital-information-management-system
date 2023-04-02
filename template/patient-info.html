@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card mt-3">
+                    <div class="card-header"> Invoice <strong>#GC23000{{invoice.0.invoiceid}}</strong> <span
+                            class="float-right">
+                            <strong>Status:</strong> Pending</span> </div>
+                    <div class="card-body">
+                        <div class="row mb-5">
+                            <div class="mt-4 col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                                <div class="row align-items-center">
+
+                                    <div class="col-sm-9">
+                                        <h6>Billed By</h6>
+                                        <div class="brand-logo mt-1 mb-3">
+                                            <img class="logo-abbr me-2" width="80" src="{% static 'images/logo.png' %}"
+                                                alt="">
+                                            <font
+                                                style="color: rgb(2, 102, 2);font-family: 'Lato', sans-serif; font-size: 25px;font-weight: 900;">
+                                                GC Hospital </font>
+                                        </div>
+                                        <p>B167/A Nirala Nagar, Lucknow,<br>
+                                            Uttar Pradesh, India - 226020</p>
+                                        <small class="text-muted">Email: care@gchospitals.com</small><br>
+                                        <small class="text-muted">Phone: +91 99188 38833</small>
+                                    </div>
+                                    <div class="col-sm-3 mt-3"> <img src="images/qr.png" alt=""
+                                            class="img-fluid width110"> </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                                <h6>Billed To</h6>
+                                <div> <strong>{{patient.pname}}</strong> </div>
+                                <div>{{patient.sex}}/{{patient.age}}</div>
+                                <div>{{patient.address}}</div>
+                                <div>Phone: +91{{patient.phone}}</div>
+                            </div>
+                            <div class="mt-4 col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                                <h6>Invoice Details:</h6>
+                                <div>Invoice No # <strong> GC23000{{invoice.0.invoiceid}}</strong> </div>
+                                <div>Invoice Date: <strong>{{invdate}}</strong></div>
+                                <div>Admission Date: <strong>{{admdate}}</strong></div>
+                                <div>Case Id: <strong>{{patient.caseid}}</strong></div>
+                                <div>Consultant I/C: <strong>{{patient.doctor}}</strong></div>
+                            </div>
+
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="invoiceTable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th style="width: 40%;">Item Name</th>
+                                        <th>Item Rate</th>
+                                        <th>Quantity</th>
+                                        <th>Total Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-5">
+                                    <button type="button" id="add_row" onclick="addRow()"
+                                        class="btn btn-success pull-left">Add Row</button>
+                                </div>
+                                <div class="col-lg-4 col-sm-5 ms-auto">
+                                    <table class="table table-clear">
+                                        <tbody>
+                                            <tr>
+                                                <td class="left"><strong>Subtotal</strong></td>
+                                                <td class="right" id="subtotal"> Rs. 0.00 <input type="hidden"
+                                                        name="subt" id="subt" value=""> </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="left"><strong>Discount</strong></td>
+                                                <td class="right"><input type="number" class="form-control" step="0.01"
+                                                        name="discountp" id="discountp"
+                                                        oninput="calcTotal('discountp',this.value)"
+                                                        placeholder="In percentage %">
+
+                                                    <input type="number" class="form-control" step="0.01"
+                                                        name="discounta" id="discounta"
+                                                        onblur="if(this.value==''){calcTotal('discounta',this.value)}"
+                                                        oninput="calcTotal('discounta',this.value)"
+                                                        placeholder="In Rupees">
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="left"><strong>Total</strong></td>
+                                                <td class="right" id="final"><strong>Rs. 0.00</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="left"><strong>Amount Paid</strong></td>
+                                                <td class="right">
+                                                    <input type="number" step="0.01" class="form-control" name="paid"
+                                                        id="paid" onblur="if(this.value==''){calcDue(0)}"
+                                                        oninput="calcDue(this.value)" placeholder="In Rupees">
+                                                        <br>
+                                                </td>
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td class="left"><strong>Payment Method</strong></td>
+                                                <td class="right">
+                                                    <div class="d-flex">
+                                                    <input type="radio" name="pmethod" class="form-check" value="Cash" id="pmethod1" checked> <label class="px-2" for="pmethod1"> Cash</label>
+                                                    <input type="radio" name="pmethod" class="form-check" value="Bank" id="pmethod2"> <label class="px-2" for="pmethod2"> Bank Transfer</label>
+                                                </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="left"><strong>Amount Due</strong></td>
+                                                <td class="right" id="due"><strong>Rs. 0.00</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="text-center">
+                                        <button type="button" onclick="submitData()" class="btn btn-success">Generate
+                                            Invoice</button>
+                                    </p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var i = 0
+        function addRow() {
+            i++;
+            let table = document.getElementById("invoiceTable");
+            let row = table.insertRow(-1);
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+            let cell4 = row.insertCell(3);
+            let cell5 = row.insertCell(4);
+            let cell6 = row.insertCell(5);
+
+            cell1.innerHTML = i
+            cell2.innerHTML = `<input type="text" name="item[]" class="form-control" placeholder="Item Name" required>`;
+            cell3.innerHTML = `<input type="number" name="rate[]" class="form-control" placeholder="Item Rate" oninput="calculateTotal(this)" required>`;
+            cell4.innerHTML = `<input type="number" name="qty[]" class="form-control" placeholder="Quantity" oninput="calculateTotal(this)" required>`;
+            cell5.innerHTML = `<input type="number" name="amt[]" class="form-control" placeholder="Total Amount" readonly>`;
+            cell6.innerHTML = `<div class="d-flex"><button type="button" class="btn btn-success m-1" onclick="addRow()"><i class="bi bi-check2-circle"></i></button><button type="button" class="btn btn-danger m-1" onclick="deleteRow(this)"><i class="bi bi-trash-fill"></i></button></div>`
+        }
+
+        function deleteRow(btn) {
+            let row = btn.parentNode.parentNode;
+            n = parseInt(row.childNodes[0].innerHTML)
+            // console.log(n)
+            th = row.parentNode
+            row.parentNode.removeChild(row);
+            for (a = 3; a < i + 2; a++) {
+                // p=th.childNodes[a].childNodes[0].innerHTML
+                th.childNodes[a].childNodes[0].innerHTML = a - 2
+            }
+            i--
+            try {
+                calculateTotal(th.childNodes[3].childNodes[2].childNodes[0])
+            } catch (error) {
+                window.location.href = window.location.href
+            }
+            
+            // console.log(th.childNodes[3].childNodes[2].childNodes[0])
+        }
+        var sub = 0.0
+        var t = 0.0
+        var csub = 0.0
+        var p = 0.0
+        function calculateTotal(input) {
+
+            let row = input.parentNode.parentNode;
+            let itemRate = row.cells[2].firstChild.value;
+            let quantity = row.cells[3].firstChild.value;
+            let totalAmount = row.cells[4].firstChild;
+            totalAmount.value = parseFloat(itemRate * quantity).toFixed(2);
+            sub = 0.0
+            th = row.parentNode
+            for (a = 3; a <= i + 2; a++) {
+                v = parseFloat(th.childNodes[a].cells[4].firstChild.value).toFixed(2)
+                // console.log(v)
+                if (!isNaN(v))
+                    sub = parseFloat(sub) + parseFloat(v)
+            }
+            // console.log()
+            csub = sub
+            document.getElementById("subtotal").innerHTML = "Rs. " + sub.toFixed(2)
+            document.getElementById("final").innerHTML = "Rs. " + csub.toFixed(2)
+            calcDue(p)
+            // calctax(csub)
+        }
+
+        function calcTotal(id, val) {
+            csub = sub
+            console.log(id)
+            val = (val == "") ? 0.0 : val
+            if (id === "discounta") {
+                val = parseFloat(val).toFixed(2)
+                if (val <= sub && val >= 0) {
+                    dp = ((val * 100) / sub).toFixed(2)
+                    csub = sub - val
+                    document.getElementById("discountp").value = dp
+                    document.getElementById("final").innerHTML = "Rs. " + csub.toFixed(2)
+                    calcDue(p)
+                    // calctax(csub)
+                    // document.getElementById("subtotal").innerHTML="Rs. "+csub.toFixed(2)
+                }
+            }
+            if (id === "discountp") {
+                val = parseFloat(val).toFixed(2)
+                if (val >= 0 && val <= 100) {
+                    d = ((val / 100) * csub).toFixed(2)
+                    csub = csub - d
+                    document.getElementById("discounta").value = d
+                    document.getElementById("final").innerHTML = "Rs. " + csub.toFixed(2)
+                    calcDue(p)
+                    // calctax(csub)
+                }
+            }
+        }
+        var testdata
+        // function calctax(amt)
+        // {
+        //     t = 0.18*amt
+        //     csub = csub + t
+        //     due = csub - p
+        //     document.getElementById("taxes").innerHTML = "Rs. "+t.toFixed(2)
+
+        //     document.getElementById("due").innerHTML = "Rs. "+ due.toFixed(2)
+        // }
+        function calcDue(paid) {
+            p = paid
+            due = csub - paid
+            document.getElementById("due").innerHTML = "Rs. " + due.toFixed(2)
+        }
+        function submitData() {
+            console.log("submiting...")
+            let data = [];
+            let table = document.getElementById("invoiceTable");
+            for (let i = 1; i < table.rows.length; i++) {
+                // let itemNumber = table.rows[i].cells[0].firstChild.value;
+                let itemName = table.rows[i].cells[1].firstChild.value;
+                let itemRate = table.rows[i].cells[2].firstChild.value;
+                let quantity = table.rows[i].cells[3].firstChild.value;
+                let totalAmount = table.rows[i].cells[4].firstChild.value;
+
+                data.push({
+                    // itemNumber: itemNumber,
+                    itemName: itemName,
+                    itemRate: itemRate,
+                    quantity: quantity,
+                    totalAmount: totalAmount
+                });
+            }
+            // Get the CSRF token from the HTML page
+            let csrf_token = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+            let subtotal = sub
+            let discount = document.getElementById("discounta").value;
+            let paid = document.getElementById("paid").value;
+            let a = document.getElementsByName("pmethod")
+            data.push({
+                'csrfmiddlewaretoken': csrf_token,
+                'subtotal': subtotal,
+                'discount': discount,
+                'paid': paid,
+                'caseid': "{{patient.caseid}}",
+                'pmethod': (a[0].checked)?a[0].value:a[1].value
+            });
+            testdata = data
+            console.log(data)
+            sendinvoice(data)
+
+            // let xhr = new XMLHttpRequest();
+            // xhr.open("POST", "/dashboard", true);
+            // xhr.setRequestHeader("Content-Type", "application/json");
+            // console.log(xhr.responseText)
+        }
+    </script>
+    {% endblock content %}

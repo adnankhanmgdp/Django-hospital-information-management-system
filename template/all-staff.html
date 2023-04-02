@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<!--**********************************
+            Content body start
+        ***********************************-->
+<!-- Button trigger modal -->
+
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table " id="doctorstable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Gender</th>
+                                        <th>Position</th>
+                                        <th>Role</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                        <th>status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for staff in staffs %}
+                                    <tr>
+                                        <td><a href="/staff/{{staff.staffId}}">{{staff.staffId}}</td></a>
+                                        <td><a href="/staff/{{staff.staffId}}">{{staff.fullname}}</td></a>
+                                        <td><a href="/staff/{{staff.staffId}}">{{staff.gender}}</td></a>
+                                        <td><a href="/staff/{{staff.staffId}}">{{staff.position}}</td></a>
+                                        <td><a href="/staff/{{staff.staffId}}">{{staff.role}}</td></a>
+                                        <td><a href="mailto:{{staff.email}}">{{staff.email}}</td></a>
+                                        <td><a href="tel:{{staff.phone}}">{{staff.phone}}</td></a>
+                                        <td><a href="/staff/{{staff.staffId}}">{{staff.address}}</td></a>
+                                        <td>{% if staff.isverifed == 1 %}
+                                            <?xml version="1.0" encoding="utf-8"?><svg width="50" height="30" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 122.88" style="enable-background:new 0 0 122.88 122.88" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#6BBE66;}</style><g><path class="st0" d="M61.44,0c33.93,0,61.44,27.51,61.44,61.44c0,33.93-27.51,61.44-61.44,61.44C27.51,122.88,0,95.37,0,61.44 C0,27.51,27.51,0,61.44,0L61.44,0z"/></g></svg>
+                                            {% else %}
+                                            <?xml version="1.0" encoding="utf-8"?><svg width="50" height="30" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 122.88" style="enable-background:new 0 0 122.88 122.88" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#FF4141;}</style><g><path class="st0" d="M61.44,0c33.93,0,61.44,27.51,61.44,61.44s-27.51,61.44-61.44,61.44S0,95.37,0,61.44S27.51,0,61.44,0L61.44,0z"/></g></svg>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--**********************************
+            Content body end
+        ***********************************-->
+{% endblock content %}
